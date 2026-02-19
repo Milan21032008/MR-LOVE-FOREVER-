@@ -575,12 +575,12 @@
         </div>
     </div>
 
-    <!-- 🎵 TUM HI HO - SHORT SONG (LOOP, VOLUME 20%) 🎵 -->
+    <!-- 🎵 LOCAL SONG - CONNECTED FROM "songs" FOLDER (tum-hi-ho.mp3) 🎵 -->
+    <!-- The song file is expected at: songs/tum-hi-ho.mp3 (relative to this HTML file) -->
     <audio id="romanticSong" loop>
-        <!-- Short version of Tum Hi Ho (Arijit Singh) -->
-        <source src="https://pagalfree.com/musics/128-Tum%20Hi%20Ho%20-%20Aashiqui%202%20128%20Kbps.mp3" type="audio/mpeg">
-        <!-- Backup source -->
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+        <!-- ✅ CORRECT RELATIVE PATH: points to the 'songs' folder in the same directory as this HTML file -->
+        <source src="songs/tum-hi-ho.mp3" type="audio/mpeg">
+        <!-- Fallback message if browser doesn't support audio -->
         Your browser does not support the audio element.
     </audio>
 
@@ -607,7 +607,7 @@
                 <div class="photo-card-3d p1"><img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=600" alt="romantic"></div>
                 <div class="photo-card-3d p2"><img src="images/photo2.jpeg" alt="couple"></div>
                 <div class="photo-card-3d p3"><img src="images/photo3.jpeg" alt="roses"></div>
-                <div class="photo-card-3d p4"><img src="images/photo4.jpg" alt="dinner"></div>
+                <div class="photo-card-3d p4"><img src="images/photo4.jpeg" alt="dinner"></div>
                 <div class="photo-card-3d p5"><img src="images/photo5.jpeg" alt="love"></div>
             </div>
         </div>
@@ -628,7 +628,7 @@
                 <div class="memory-quote">"Tere bina zindagi adhoori, tu mila toh duniya poori."</div>
             </div>
             <div class="memory-card-luxury">
-                <img src="images/photo4.jpg" alt="memory4">
+                <img src="images/photo4.jpeg" alt="memory4">
                 <div class="memory-quote">"Har anniversary, tera pyaar pehle se zyada."</div>
             </div>
             <div class="memory-card-luxury">
@@ -672,7 +672,7 @@
                 setTimeout(() => {
                     overlay.style.display = 'none';
                     mainContent.style.display = 'flex'; // show main content
-                    // Start music when page is unlocked
+                    // Start music when page is unlocked (from local folder)
                     playMusic();
                 }, 600);
             } else {
@@ -691,21 +691,26 @@
         });
 
         // ----------------------------------------------------------------
-        // MUSIC - TUM HI HO (20% volume)
+        // MUSIC - CONNECTED TO LOCAL "songs" FOLDER (tum-hi-ho.mp3)
         // ----------------------------------------------------------------
         const audio = document.getElementById('romanticSong');
         audio.volume = 0.2; // low volume
         
         function playMusic() {
+            // Try to play the audio from the path: songs/tum-hi-ho.mp3
             audio.play()
-                .then(() => console.log("Tum Hi Ho playing"))
-                .catch(e => console.log("Playback failed", e));
+                .then(() => console.log("🎵 Playing Tum Hi Ho from songs/tum-hi-ho.mp3"))
+                .catch(e => {
+                    console.log("Playback failed or file missing: ", e);
+                    console.log("Please ensure the file exists at: songs/tum-hi-ho.mp3");
+                });
         }
         
         // Also try on user interaction after unlock (safety)
         document.body.addEventListener('click', function musicOnClick() {
-            if (overlay.style.display === 'none') {
-                audio.play();
+            // Only attempt if overlay is gone and audio is not already playing
+            if (overlay.style.display === 'none' && audio.paused) {
+                audio.play().catch(() => {});
             }
         }, { once: true });
 
